@@ -18,18 +18,24 @@ from sklearn.ensemble import RandomForestClassifier
 #################################################################################
 
 #importo o csv dos codons pre-processados
-genoma = pd.read_csv('tiposdecodons.csv', sep=';')
+genoma = pd.read_csv('tiposdecodons.csv', sep=',')
 
 print(genoma.head(10)) #Exibo os primeiros 10 elementos da lista
 
 #################################################################################
 
 
-categorias = genoma.iloc[:,0:1].values #Pego todas as linhas e colunas de 0 a 0 e transformo em matriz
-classes = genoma.iloc[:,1] #Pego todas as linhas da coluna 1 e transformo em matriz
+categorias = genoma.iloc[:,0:3].values #Pego todas as linhas e colunas de 0 a 0 e transformo em matriz
+classes = genoma.iloc[:,3] #Pego todas as linhas da coluna 1 e transformo em matriz
 
 labelencoder1 = LabelEncoder()
 categorias[:,0] = labelencoder1.fit_transform(categorias[:,0])
+
+labelencoder2 = LabelEncoder()
+categorias[:,1] = labelencoder2.fit_transform(categorias[:,1])
+
+labelencoder3 = LabelEncoder()
+categorias[:,2] = labelencoder3.fit_transform(categorias[:,2])
 
 
 #################################################################################
@@ -40,7 +46,7 @@ categorias[:,0] = labelencoder1.fit_transform(categorias[:,0])
 #X sao os dados das categorias e Y os dados daquilo que eu desejo prever
 x_treinamento, x_teste, y_treinamento, y_teste = train_test_split(categorias, 
                                                                   classes, 
-                                                                  test_size = 0.6,
+                                                                  test_size = 0.25,
                                                                   random_state = 0)
 
 print(x_teste)
@@ -79,16 +85,22 @@ print(taxa_acerto)
 
 # Aplicando o modelo no genoma humano do cromossomo 19
 
-dadosnovos = pd.read_csv('tiposdecodons.csv', sep=';')
+dadosnovos = pd.read_csv('genomacodons.csv', sep=',')
 
 print(dadosnovos.head(10))
 
 ################################################################################
 
-categoriasnovas = dadosnovos.iloc[:,0:1].values #Pego todas as categorias da coluna 0 a 0
+categoriasnovas = dadosnovos.iloc[:,0:3].values #Pego todas as categorias da coluna 0 a 0
 
 #Reutilizo os LabelEncoders utilizados anteriormente
 categoriasnovas[:,0] = labelencoder1.fit_transform(categoriasnovas[:,0])
+
+categoriasnovas[:,1] = labelencoder2.fit_transform(categoriasnovas[:,1])
+
+categoriasnovas[:,2] = labelencoder3.fit_transform(categoriasnovas[:,2])
+
+
 
 #Uso o modelo Random Forest para fazer a predicao das novas categorias
 
@@ -101,4 +113,4 @@ print(resultado)
 
 #Salvo os codons em um csv
 converter = pd.DataFrame(resultado)
-converter.to_csv('genomaaminoacidos.csv', index=False, header=False)
+converter.to_csv('genomaaminoacidos.csv', index=False, header=True)

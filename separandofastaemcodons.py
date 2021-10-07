@@ -52,6 +52,6 @@ codons = np.split(genoma, len(arquivoprocessado)/3) #Pego o numero de nucleotide
 
 #Salvo os codons em um csv
 converter = pd.DataFrame(codons)
-converter.to_csv('genomacodons.csv', index=False, header=False)
+converter.to_csv('genomacodons.csv', index=False, header=True)
 
 
